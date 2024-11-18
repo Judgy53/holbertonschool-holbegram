@@ -11,7 +11,6 @@ Future main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // Méthode pour construire le widget
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
