@@ -1,4 +1,4 @@
-package com.example.holbegram
+package com.judgy.holbegram
 
 import io.flutter.embedding.android.FlutterActivity
 
