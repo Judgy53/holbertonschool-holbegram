@@ -7,6 +7,13 @@ class AuthMethods {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  static Future<Users> getUserDetails() async {
+    var uid = _auth.currentUser!.uid;
+    var snap = await _firestore.collection("users").doc(uid).get();
+
+    return Users.fromSnap(snap);
+  }
+
   static Future<String> login({required String email, required String password}) async {
     if (email.isEmpty || password.isEmpty) return "Please fill all the fields";
 
