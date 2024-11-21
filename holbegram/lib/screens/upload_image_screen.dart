@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:holbegram/methods/auth_methods.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddPicture extends StatefulWidget {
@@ -23,19 +24,8 @@ class _AddPictureState extends State<AddPicture> {
   Uint8List? _image;
   final ImagePicker picker = ImagePicker();
 
-  void _selectImageFromGallery() async {
-    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      final bytes = await image.readAsBytes();
-      setState(() {
-        _image = bytes;
-      });
-    }
-  }
-
-  void _selectImageFromCamera() async {
-    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+  void _pickImage(ImageSource source) async {
+    final XFile? image = await picker.pickImage(source: source);
 
     if (image != null) {
       final bytes = await image.readAsBytes();
@@ -51,6 +41,26 @@ class _AddPictureState extends State<AddPicture> {
     }
 
     return Image.memory(_image!, width: 200, height: 200);
+  }
+
+  void _signUpUser() async {
+    if (_image == null) {
+      var snackBar = const SnackBar(content: Text("Password confirmation doesn't match"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }
+
+    String authMessage = await AuthMethods.signUp(
+      email: widget.email,
+      password: widget.password,
+      username: widget.username,
+      file: _image
+    );
+
+    if (mounted) {
+      var snackBar = SnackBar(content: Text('Signup: $authMessage'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   @override
@@ -84,12 +94,12 @@ class _AddPictureState extends State<AddPicture> {
                         IconButton(
                           icon: const Icon(Icons.image_outlined, color: Color.fromARGB(255, 228, 70, 50)),
                           iconSize: 50,
-                          onPressed : _selectImageFromGallery
+                          onPressed : () => _pickImage(ImageSource.gallery)
                         ),
                         IconButton(
                           icon: const Icon(Icons.camera_alt_outlined, color: Color.fromARGB(255, 228, 70, 50)),
                           iconSize: 50,
-                          onPressed : _selectImageFromCamera
+                          onPressed : () => _pickImage(ImageSource.camera)
                         ),
                       ]
                     ),
@@ -101,7 +111,7 @@ class _AddPictureState extends State<AddPicture> {
                           borderRadius: BorderRadius.circular(5.0),
                         )),
                       ),
-                      onPressed: () {},
+                      onPressed: _signUpUser,
                       child: const Text("Next", style: TextStyle(color: Colors.white, fontSize: 25))
                     )
                   ],

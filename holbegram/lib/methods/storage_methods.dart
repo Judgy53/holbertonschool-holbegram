@@ -5,6 +5,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 
 class StorageMethods {
+  static const childProfilePhotos = "profilePhotos";
+
   static final FirebaseStorage _storage = FirebaseStorage.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 

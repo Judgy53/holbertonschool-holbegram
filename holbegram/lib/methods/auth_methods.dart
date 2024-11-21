@@ -31,12 +31,15 @@ class AuthMethods {
 
       if (user == null) return 'User creation failed';
 
+      /* DISABLED BECAUSE FIREBASE PRICING CHANGE */
+      //String photoURL = file != null ? await StorageMethods.uploadImageToStorage(false, StorageMethods.childProfilePhotos, file) : "";
+
       Users userModel = Users(
         uid: user.uid,
         email: email,
         username: username,
         bio: "",
-        photoUrl: "",
+        photoUrl: "", // photoURL
         followers: [],
         following: [],
         posts: [],
@@ -48,10 +51,10 @@ class AuthMethods {
 
       return "Success";
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
+      if (e.code == "email-already-in-use") {
         return "The account already exists for that email.";
       }
-      return e.code;
+      return e.toString();
     } catch (e) {
       return e.toString();
     }

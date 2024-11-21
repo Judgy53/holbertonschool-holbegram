@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:holbegram/methods/auth_methods.dart';
 import 'package:holbegram/screens/login_screen.dart';
+import 'package:holbegram/screens/upload_image_screen.dart';
 import 'package:holbegram/widgets/text_field.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -42,23 +42,22 @@ class _SignUpScreen extends State<SignUpScreen> {
     );
   }
 
-  void _trySignup() async {
+  void _openAddPicturePage() {
     if (passwordController.value != passwordConfirmController.value) {
       var snackBar = const SnackBar(content: Text("Password confirmation doesn't match"));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       return;
     }
 
-    String success = await AuthMethods.signUp(
-      email: emailController.text,
-      password: passwordController.text,
-      username: usernameController.text
+    Navigator.push(context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => AddPicture(
+          email: emailController.text,
+          password: passwordController.text,
+          username: usernameController.text
+        )
+      )
     );
-
-    if (mounted) {
-      var snackBar = SnackBar(content: Text('Signup: $success'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
   }
 
   @override
@@ -144,7 +143,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                         borderRadius: BorderRadius.circular(5.0),
                       )),
                     ),
-                    onPressed: _trySignup,
+                    onPressed: _openAddPicturePage,
                     child: const Text("Sign up", style: TextStyle(color: Colors.white))
                   )
                 ),
