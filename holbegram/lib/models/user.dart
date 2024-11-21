@@ -12,7 +12,20 @@ class Users {
   late List<dynamic> saved;
   late String searchKey;
 
-  Users.fromJson(DocumentSnapshot snap) {
+  Users({
+    required this.uid,
+    required this.email,
+    required this.username,
+    required this.bio,
+    required this.photoUrl,
+    required this.followers,
+    required this.following,
+    required this.posts,
+    required this.saved,
+    required this.searchKey,
+  });
+
+  Users.fromSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
 
     uid = snapshot["uid"];

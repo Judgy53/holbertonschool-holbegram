@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:holbegram/methods/auth_methods.dart';
 import 'package:holbegram/screens/signup_screen.dart';
 import 'package:holbegram/widgets/text_field.dart';
 
@@ -33,6 +34,15 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (BuildContext context) => const SignUpScreen()
       )
     );
+  }
+
+  void _tryLogin() async {
+    String success = await AuthMethods.login(email: emailController.text, password: passwordController.text);
+
+    if (mounted) {
+      var snackBar = SnackBar(content: Text("Login: $success"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   @override
@@ -87,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(5.0),
                           )),
                         ),
-                        onPressed: () {},
+                        onPressed: _tryLogin,
                         child: const Text("Log in", style: TextStyle(color: Colors.white))
                       )
                     ),

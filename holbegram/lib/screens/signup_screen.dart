@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:holbegram/methods/auth_methods.dart';
 import 'package:holbegram/screens/login_screen.dart';
 import 'package:holbegram/widgets/text_field.dart';
 
@@ -39,6 +40,25 @@ class _SignUpScreen extends State<SignUpScreen> {
         builder: (BuildContext context) => const LoginScreen()
       )
     );
+  }
+
+  void _trySignup() async {
+    if (passwordController.value != passwordConfirmController.value) {
+      var snackBar = const SnackBar(content: Text("Password confirmation doesn't match"));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      return;
+    }
+
+    String success = await AuthMethods.signUp(
+      email: emailController.text,
+      password: passwordController.text,
+      username: usernameController.text
+    );
+
+    if (mounted) {
+      var snackBar = SnackBar(content: Text('Signup: $success'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   @override
@@ -124,7 +144,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                         borderRadius: BorderRadius.circular(5.0),
                       )),
                     ),
-                    onPressed: () {},
+                    onPressed: _trySignup,
                     child: const Text("Sign up", style: TextStyle(color: Colors.white))
                   )
                 ),
