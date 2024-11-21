@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:holbegram/methods/auth_methods.dart';
 import 'package:holbegram/screens/signup_screen.dart';
+import 'package:holbegram/screens/upload_image_screen.dart';
 import 'package:holbegram/widgets/text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -37,11 +38,22 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _tryLogin() async {
-    String success = await AuthMethods.login(email: emailController.text, password: passwordController.text);
+    String message = await AuthMethods.login(email: emailController.text, password: passwordController.text);
 
-    if (mounted) {
-      var snackBar = SnackBar(content: Text("Login: $success"));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    if (!mounted) return;
+
+    var snackBar = SnackBar(content: Text("Login: $message"));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    if (message == "Success") {
+      Navigator.push(context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => AddPicture(
+            email: emailController.text,
+            password: passwordController.text,
+            username: "{USERNAME}")
+        )
+      );
     }
   }
 
