@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:holbegram/methods/auth_methods.dart';
+import 'package:holbegram/providers/user_provider.dart';
 import 'package:holbegram/screens/home.dart';
 import 'package:holbegram/screens/signup_screen.dart';
 import 'package:holbegram/widgets/text_field.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -46,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
     if (message == "Success") {
+      Provider.of<UserProvider>(context, listen: false).refreshUser();
       Navigator.push(context,
         MaterialPageRoute(
           builder: (BuildContext context) => const Home()

@@ -2,7 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:holbegram/methods/auth_methods.dart';
+import 'package:holbegram/providers/user_provider.dart';
+import 'package:holbegram/screens/home.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddPicture extends StatefulWidget {
   final String email;
@@ -60,6 +63,13 @@ class _AddPictureState extends State<AddPicture> {
     if (mounted) {
       var snackBar = SnackBar(content: Text('Signup: $authMessage'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      Provider.of<UserProvider>(context, listen: false).refreshUser();
+      Navigator.push(context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const Home()
+        )
+      );
     }
   }
 

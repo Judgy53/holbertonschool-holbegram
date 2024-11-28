@@ -51,12 +51,12 @@ class _BottomNavState extends State<BottomNav> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        children: const [
-          Feed(),
-          Search(),
-          AddImage(),
-          Favorite(),
-          Profile()
+        children: [
+          const Feed(),
+          const Search(),
+          AddImage(setPageIndex: _onPageChange),
+          const Favorite(),
+          const Profile()
         ],
       ),
       bottomNavigationBar: BottomNavyBar(
@@ -65,10 +65,14 @@ class _BottomNavState extends State<BottomNav> {
         itemCornerRadius: 8,
         curve: Curves.easeInBack,
         onItemSelected: _onPageChange,
-
         items: items.map((item) => BottomNavyBarItem(
           icon: Icon(item["icon"] as IconData),
-          title: Text(item["title"] as String, style: const TextStyle(fontSize: 25, fontFamily: "Billabong")),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(item["title"] as String, style: const TextStyle(fontSize: 25, fontFamily: "Billabong"))
+            ]
+          ),
           activeColor: Colors.red,
           inactiveColor: Colors.black,
           textAlign: TextAlign.center,
