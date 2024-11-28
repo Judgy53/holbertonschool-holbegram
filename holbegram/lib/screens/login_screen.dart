@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:holbegram/methods/auth_methods.dart';
+import 'package:holbegram/screens/home.dart';
 import 'package:holbegram/screens/signup_screen.dart';
-import 'package:holbegram/screens/upload_image_screen.dart';
 import 'package:holbegram/widgets/text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -48,10 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (message == "Success") {
       Navigator.push(context,
         MaterialPageRoute(
-          builder: (BuildContext context) => AddPicture(
-            email: emailController.text,
-            password: passwordController.text,
-            username: "{USERNAME}")
+          builder: (BuildContext context) => const Home()
         )
       );
     }
