@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:holbegram/methods/storage_methods.dart';
 import 'package:holbegram/models/user.dart';
 
 class AuthMethods {
@@ -39,14 +40,14 @@ class AuthMethods {
       if (user == null) return 'User creation failed';
 
       /* DISABLED BECAUSE FIREBASE PRICING CHANGE */
-      //String photoURL = file != null ? await StorageMethods.uploadImageToStorage(false, StorageMethods.childProfilePhotos, file) : "";
+      String photoURL = file != null ? await StorageMethods.uploadImageToStorage(false, StorageMethods.childProfilePhotos, file) : "";
 
       Users userModel = Users(
         uid: user.uid,
         email: email,
         username: username,
         bio: "",
-        photoUrl: "", // photoURL
+        photoUrl: photoURL, // photoURL
         followers: [],
         following: [],
         posts: [],

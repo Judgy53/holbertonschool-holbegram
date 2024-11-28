@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:holbegram/models/post.dart';
+import 'package:holbegram/screens/Pages/methods/post_storage.dart';
 
 class Posts extends StatefulWidget {
 
@@ -11,8 +12,8 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
-
   void _deletePost(Post post) {
+    PostStorage().deletePost(post.postId);
     var snackBar = const SnackBar(content: Text("Post Deleted"));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
