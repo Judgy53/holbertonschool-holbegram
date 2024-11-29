@@ -21,18 +21,20 @@ class _PostsState extends State<Posts> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection("posts").snapshots(),
+      stream: FirebaseFirestore.instance
+                .collection("posts")
+                .orderBy("datePublished", descending: true)
+                .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) return ErrorWidget(snapshot.error!);
         if (!snapshot.hasData) return const CircularProgressIndicator();
 
-        var data = snapshot.data!.docs;
+        final data = snapshot.data!.docs.map((element) => Post.fromSnap(element)).toList();
 
         return ListView.builder(
           itemCount: data.length,
           itemBuilder: (context, index) {
-            var post = Post.fromSnap(data[index]);
-
+            final post = data[index];
             return SingleChildScrollView(
               child: Container(
                 margin: EdgeInsetsGeometry.lerp(const EdgeInsets.all(8), const EdgeInsets.all(8), 10),

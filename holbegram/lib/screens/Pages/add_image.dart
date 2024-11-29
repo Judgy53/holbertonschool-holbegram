@@ -17,11 +17,17 @@ class AddImage extends StatefulWidget {
 
 class _AddImageState extends State<AddImage> {
   final _captionController = TextEditingController();
-  final ImagePicker picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker();
   Uint8List? _image;
 
+  @override
+  void dispose() {
+    _captionController.dispose();
+    super.dispose();
+  }
+
   void _pickImage(ImageSource source, BuildContext context) async {
-    final XFile? image = await picker.pickImage(source: source);
+    final XFile? image = await _picker.pickImage(source: source);
 
     if (image != null) {
       final bytes = await image.readAsBytes();
@@ -117,7 +123,7 @@ class _AddImageState extends State<AddImage> {
     );
   }
 
-    void _showPickSourceModal() {
+  void _showPickSourceModal() {
     showModalBottomSheet(
       context: context,
       builder: (context) => SizedBox(

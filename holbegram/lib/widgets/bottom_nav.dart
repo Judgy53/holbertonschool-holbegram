@@ -31,10 +31,10 @@ class _BottomNavState extends State<BottomNav> {
     super.dispose();
   }
 
-  void _onPageChange(int index) {
+  void _onPageChange(int index, {bool animate = true}) {
     setState(() {
       _currentIndex = index;
-      _pageController.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease);
+      if (animate) _pageController.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 
@@ -51,6 +51,7 @@ class _BottomNavState extends State<BottomNav> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
+        onPageChanged: (index) => _onPageChange(index, animate: false),
         children: [
           const Feed(),
           const Search(),
