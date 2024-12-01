@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:holbegram/models/post.dart';
+import 'package:holbegram/models/user.dart';
+import 'package:holbegram/providers/user_provider.dart';
 import 'package:holbegram/screens/Pages/methods/post_storage.dart';
+import 'package:provider/provider.dart';
 
 class Posts extends StatefulWidget {
 
@@ -12,10 +15,34 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
-  void _deletePost(Post post) {
-    PostStorage().deletePost(post.postId);
-    var snackBar = const SnackBar(content: Text("Post Deleted"));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  late UserProvider _loggedInUserProvider;
+  Users get loggedInUser => _loggedInUserProvider.user;
+
+  @override
+  void initState() {
+    super.initState();
+    _loggedInUserProvider = Provider.of<UserProvider>(context, listen: false);
+  }
+
+  void _deletePost(Post post) async {
+    final deleteStatus = await PostStorage().deletePost(post, loggedInUser);
+
+    if (mounted) {
+      var snackBar = SnackBar(content: Text(deleteStatus));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
+  bool _isPostSaved(Post post) => post.likes.contains(loggedInUser.uid);
+
+  void _toggleSavePost(Post post) {
+    final postStorage = PostStorage();
+
+    if (_isPostSaved(post)) {
+      postStorage.unSavePost(post, loggedInUser);
+    } else {
+      postStorage.savePost(post, loggedInUser);
+    }
   }
 
   @override
@@ -68,7 +95,7 @@ class _PostsState extends State<Posts> {
                         ),
                       ],
                     ),
-                    SizedBox(child: Text(post.caption)),
+                    SizedBox(child: Text(post.caption, textAlign: TextAlign.center,)),
                     const SizedBox(height: 10),
                     Container(
                       width: 350,
@@ -81,17 +108,22 @@ class _PostsState extends State<Posts> {
                         )
                       )
                     ),
-                    const Padding(
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 10),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.symmetric(horizontal: 20, vertical: 10),
                       child: Row(
                         children: [
-                          Icon(Icons.favorite_border),
-                          SizedBox(width: 20),
-                          Icon(Icons.chat_bubble_outline),
-                          SizedBox(width: 20),
-                          Icon(Icons.send),
-                          Spacer(),
-                          Icon(Icons.bookmark_outline)
+                          IconButton(
+                            icon: _isPostSaved(post)
+                                    ? const Icon(Icons.favorite, color: Colors.red)
+                                    : const Icon(Icons.favorite_border),
+                            onPressed: () => _toggleSavePost(post),
+                          ),
+                          const SizedBox(width: 10),
+                          const Icon(Icons.chat_bubble_outline),
+                          const SizedBox(width: 20),
+                          const Icon(Icons.send),
+                          const Spacer(),
+                          const Icon(Icons.bookmark_outline)
                         ]
                       ),
                     ),

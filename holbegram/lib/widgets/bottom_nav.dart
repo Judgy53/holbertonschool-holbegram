@@ -34,6 +34,7 @@ class _BottomNavState extends State<BottomNav> {
   void _onPageChange(int index, {bool animate = true}) {
     setState(() {
       _currentIndex = index;
+      FocusScope.of(context).unfocus();
       if (animate) _pageController.animateToPage(index, duration: const Duration(milliseconds: 500), curve: Curves.ease);
     });
   }

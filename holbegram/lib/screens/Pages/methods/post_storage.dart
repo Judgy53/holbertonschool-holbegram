@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:holbegram/methods/storage_methods.dart';
 import 'package:holbegram/models/post.dart';
+import 'package:holbegram/models/user.dart';
 
 class PostStorage {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -34,7 +35,34 @@ class PostStorage {
     }
   }
 
-  Future<void> deletePost(String postId) {
-    return _firestore.collection("posts").doc(postId).delete();
+  Future<String> deletePost(Post post, Users loggedInUser) async {
+    if (loggedInUser.uid != post.uid) return "Can't delete not owned post";
+
+    await _firestore.collection("posts").doc(post.postId).delete();
+    await _firestore.collection("users").doc(post.uid).update({
+      "posts": FieldValue.arrayRemove([post.postId])
+    });
+
+    return "Post Deleted";
+  }
+
+  Future<void> savePost(Post post, Users loggedInUser) async {
+    await _firestore.collection("posts").doc(post.postId).update({
+      "likes": FieldValue.arrayUnion([loggedInUser.uid])
+    });
+
+    await _firestore.collection("users").doc(loggedInUser.uid).update({
+      "saved": FieldValue.arrayUnion([post.postId])
+    });
+  }
+
+  Future<void> unSavePost(Post post, Users loggedInUser) async {
+    await _firestore.collection("posts").doc(post.postId).update({
+      "likes": FieldValue.arrayRemove([loggedInUser.uid])
+    });
+
+    await _firestore.collection("users").doc(loggedInUser.uid).update({
+      "saved": FieldValue.arrayRemove([post.postId])
+    });
   }
 }
